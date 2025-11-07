@@ -1,0 +1,298 @@
+/* Tokens y tipografía */
+:root{
+  --brand-blue:#123A8A;     /* azul corporativo */
+  --brand-sky:#1565C0;      /* azul medio */
+  --brand-teal:#7afff0;     /* turquesa */
+  --ink:#111827;            /* gris muy oscuro */
+  --soft:#F5F6FA;           /* gris suave fondo */
+  --muted:#9fb3c8;          /* texto secundario */
+  --footer:#09386e;         /* fondo footer */
+  --footer-ink:#072c56;     /* franja inferior */
+}
+
+body, h1, p { font-family:'Poppins', sans-serif; }
+
+/* HERO */
+.hero-bg{
+  background:
+    radial-gradient(900px 600px at 90% 0%, rgba(20,184,166,.18) 0%, rgba(20,184,166,0) 60%),
+    radial-gradient(750px 520px at 20% 10%, rgba(28,121,207,.18) 0%, rgba(28,121,207,0) 60%),
+    linear-gradient(180deg, #1565C0 0%, #147CC4 40%, #12A9B0 120%);
+  color:#fff;
+}
+.shadow-soft{ box-shadow:0 12px 36px rgba(2,8,23,.12); }
+
+.btn-hero-primary{ background:#A6F3F1; color:#000; border:none; }
+.btn-hero-primary:hover{ background:#0d244d; color:#fff; }
+
+.text-shadow{ text-shadow:0 8px 8px rgba(0,0,0,.15); }
+.text-blue-75{ color:rgb(146,255,250); }
+
+.dot{ width:.5rem; height:.5rem; display:inline-block; border-radius:50%; }
+
+.bg-ink{ background:#111827; }
+.icon-badge{
+  width:44px; height:44px; display:grid; place-content:center;
+  background:#EAF2FF; border-radius:12px;
+}
+
+/* separa el hero del navbar fijo */
+.hero-section{ padding-top:7.5rem; padding-bottom:3rem; }
+@media (min-width:992px){ .hero-section{ padding-top:9rem; padding-bottom:4rem; } }
+@media (max-width:991.98px){
+  .glass{ padding:1rem !important; }
+}
+
+/* HEADER / NAVBAR */
+.navbar-glass{
+  background: rgba(88, 89, 90, 0.12);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom:1px solid rgba(88, 89, 90, 0.12);
+  transition: all .25s ease;
+}
+.navbar-glass .container,
+.navbar-glass .container-fluid{
+  max-width: 2320px;
+}
+.navbar-glass .navbar-brand .brand-mark{
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,.2));
+}
+.navbar-glass .nav-link{
+  color: rgba(255,255,255,.88);
+  padding:.55rem .8rem;
+  border-radius:.6rem;
+  transition: background .2s ease, color .2s ease, box-shadow .2s ease;
+}
+.navbar-glass .nav-link:hover,
+.navbar-glass .nav-link:focus{
+  color:#fff; background: rgba(255,255,255,.14);
+}
+.navbar-glass .nav-link.active{
+  color:#fff;
+  background: rgba(20,184,166,.22);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.11);
+}
+
+/* botón login navbar */
+.btn-login-outline{
+  color:#fff; border:1px solid rgba(255,255,255,0.11);
+  padding:.5rem .9rem; border-radius:.6rem; font-weight:600;
+  transition: all .2s ease;
+}
+.btn-login-outline:hover{
+  background:var(--brand-teal); border-color:transparent; color:#052b1b;
+}
+
+/* colapso en móvil */
+.navbar-collapse{
+  background: rgba(255, 255, 255, 0.11);
+  backdrop-filter: blur(8px);
+  border-radius:0 0 12px 12px;
+  padding:1rem 0;
+}
+@media (min-width:992px){
+  .navbar-collapse{ background:transparent; padding:0; border-radius:0; }
+}
+.navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
+  transform:rotate(90deg);
+  transition:transform .3s ease;
+}
+.navbar-toggler-icon { transition:transform .3s ease; }
+
+/* Navbar shrink al hacer scroll */
+.navbar-shrink{
+  background: rgba(88, 89, 90, 0.12);
+  border-bottom-color: rgba(88, 89, 90, 0.12);
+  padding-top:.25rem !important;
+  padding-bottom:.25rem !important;
+}
+
+/* FOOTER */
+.footer{
+  background:var(--footer);
+  color:#e5eef7;
+  margin-top:0;
+}
+.footer-conteiner,
+.footer-container{
+  max-width:1200px;
+  margin-inline:auto;
+  padding:2.25rem 1rem 0;
+}
+
+/* Grid responsivo */
+.footer .footer-conteiner,
+.footer .footer-container{
+  display:grid; gap:1.5rem; grid-template-columns:1fr;
+}
+@media (min-width:768px){
+  .footer .footer-conteiner,
+  .footer .footer-container{ grid-template-columns:repeat(2,1fr); }
+}
+@media (min-width:992px){
+  .footer .footer-conteiner,
+  .footer .footer-container{ grid-template-columns:repeat(4,1fr); }
+}
+
+/* Títulos footer */
+.footer-section h3{
+  font-size:1.2rem; font-weight:700; margin-bottom:20px; position:relative;
+}
+.footer-section h3::after{
+  content:""; display:block; width:64px; height:3px;
+  background:var(--brand-teal); border-radius:2px; margin-top:.35rem;
+}
+.footer-section p{ margin:.35rem 0; color:#dbe8f7; }
+
+/* Enlaces */
+.footer-links{ list-style:none; margin:0; padding:0; }
+.footer-links li{ margin:.35rem 0; }
+.footer-links a{
+  color:#dbe8f7; text-decoration:none; transition:color .2s ease;
+}
+.footer-links a:hover{ color:#7dddfa; text-decoration:underline; }
+
+/* Contacto */
+.contact-info{ margin-top:.5rem; }
+.contact-item{
+  display:flex; align-items:center; gap:.6rem;
+  margin:.4rem 0; color:#eaf4ff;
+}
+.contact-item i{ color:var(--brand-teal); }
+
+/* Social e iconos */
+.footer .fa-lock{ margin-right:.4rem; }
+.footer .fa-facebook{ font-size:1rem; }
+
+/* SECCIÓN ACERCA DE */
+.py-5 {
+  padding-top: 3rem !important;
+  padding-bottom: 3rem !important;
+}
+.display-5 {
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+.lead {
+  font-size: 1.25rem;
+  font-weight: 300;
+}
+/* Tarjetas de características */
+.feature-card {
+  transition: all 0.3s ease;
+  border: 1px solid rgba(18, 58, 138, 0.1) !important;
+}
+.hover-lift:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(2, 8, 23, 0.15) !important;
+}
+/* Iconos y badges */
+.icon-badge {
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  margin: 0 auto 1.5rem auto;
+}
+.bg-primary-soft {
+  background: rgba(18, 58, 138, 0.1) !important;
+}
+.bg-success-soft {
+  background: rgba(20, 184, 166, 0.1) !important;
+}
+.bg-info-soft {
+  background: rgba(28, 121, 207, 0.1) !important;
+}
+/* Colores de texto para las tarjetas */
+.text-success {
+  color: #14B8A6 !important;
+}
+.text-info {
+  color: #1C79CF !important;
+}
+.text-primary {
+  color: var(--brand-blue) !important;
+}
+/* Listas mejoradas */
+.list-unstyled li {
+  padding: 0.25rem 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Badge inferior */
+.bg-opacity-10 {
+  background-color: rgba(18, 58, 138, 0.1) !important;
+}
+.rounded-pill {
+  border-radius: 50rem !important;
+}
+
+/* Espaciados mejorados */
+.mb-3 {
+  margin-bottom: 1rem !important;
+}
+.mb-4 {
+  margin-bottom: 1.5rem !important;
+}
+.mb-5 {
+  margin-bottom: 3rem !important;
+}
+.mt-5 {
+  margin-top: 3rem !important;
+}
+
+/* Títulos de tarjetas */
+.fw-bold {
+  font-weight: 700 !important;
+}
+
+/* Texto centrado */
+.text-center {
+  text-align: center !important;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+  .display-5 {
+    font-size: 2rem;
+  }
+  .lead {
+    font-size: 1.1rem;
+  }
+  .icon-badge {
+    width: 60px;
+    height: 60px;
+  }
+  .feature-card {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Mejoras generales para las tarjetas */
+.card-body p {
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+.card-body ul {
+  padding-left: 0;
+}
+
+/* Efectos hover suaves */
+.feature-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Sombra suave para las tarjetas */
+.shadow-soft {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+}
+.border-0 {
+  border: none !important;
+}
+.rounded-4 {
+  border-radius: 1rem !important;
+}

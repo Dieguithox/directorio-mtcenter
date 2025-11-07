@@ -1,0 +1,27 @@
+.bg-login {
+  background: linear-gradient(135deg, #125ca6 0%, #c1f8ff 100%);
+}
+
+.card {
+  border: none;
+}
+
+.nav-pills .nav-link {
+  border-radius: 20px;
+}
+
+.btn-primary {
+  background-color: #0d6efd; /* Bootstrap 5 primary */
+  border: none;
+}
+.btn-primary:hover {
+  background-color: #0b5ed7;
+}
+
+.btn-success {
+  background-color: #198754; /* Bootstrap 5 success */
+  border: none;
+}
+.btn-success:hover {
+  background-color: #157347;
+}
