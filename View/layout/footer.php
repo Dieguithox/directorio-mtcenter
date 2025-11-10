@@ -28,7 +28,7 @@
         <div class="contact-info">
           <div class="contact-item">
             <i class="fa-solid fa-map-pin" style="color: #ff0000ff;"></i>
-            <p>Vicente Guerrer, Lomas de Cortes, Cuernavaca, Mor.</p>
+            <p>Vicente Guerrero,Cortes, Cuernavaca, Mor.</p>
           </div>
           <div class="contact-item">
             <i class="fa-solid fa-address-book" style="color: #a9fa68ff;"></i>
@@ -36,7 +36,7 @@
           </div>
           <div class="contact-item">
             <i class="fas fa-envelope" style="color: #f89c23ff;"></i>
-            <p>soporte@mtcenter.com.mx.</p>
+            <p>soporte@mtcenter.com.mx</p>
           </div>
         </div>
       </div>
