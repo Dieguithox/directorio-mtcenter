@@ -295,74 +295,56 @@ switch ($accion) {
         break;
     }
 
-        // HORARIOS
-    case 'horarios.listar': {
-        $rol = $_SESSION['usuario']['tipoUsuario'] ?? '';
-            if ($rol === 'editor') { $E->horariosListar(); }
-        else { $A->horariosListar(); }
-    break;
-    }
-    case 'horarios.crear': {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            irA(BASE_URL . '/config/app.php?accion=horarios.listar');
-        }
-        $A->horariosCrear();
-        break;
-    }
-    case 'horarios.actualizar': {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            irA(BASE_URL . '/config/app.php?accion=horarios.listar');
-        }
-        $A->horariosActualizar();
-        break;
-    }
-    case 'horarios.eliminar': {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            irA(BASE_URL . '/config/app.php?accion=horarios.listar');
-        }
-        $A->horariosEliminar();
-        break;
-    }
-
-        // NOTAS
+     // NOTAS
     case 'notas.listar': {
         $rol = $_SESSION['usuario']['tipoUsuario'] ?? '';
-            if ($rol === 'editor') { $E->notasListar(); } 
-        elseif ($rol === 'admin') { $A->notasListar(); }
-        else { $Co->notasListar(); }
-    break;
+        if ($rol === 'editor') { $E->notasListar(); } else { $A->notasListar(); }
+        break;
     }
-
     case 'notas.crear': {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ' . BASE_URL . '/config/app.php?accion=notas.listar'); break; }
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') { irA(BASE_URL . '/config/app.php?accion=notas.listar'); }
         $rol = $_SESSION['usuario']['tipoUsuario'] ?? '';
-        if ($rol === 'admin' || $rol === 'editor' || $rol === 'consultor') {
-            $A->notasCrear();
-        } else {
-            $Co->notasCrear();
-        }
+        if ($rol === 'editor') { $E->notasCrear(); } else { $A->notasCrear(); }
         break;
     }
     case 'notas.actualizar': {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ' . BASE_URL . '/config/app.php?accion=notas.listar'); break; }
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') { irA(BASE_URL . '/config/app.php?accion=notas.listar'); }
         $rol = $_SESSION['usuario']['tipoUsuario'] ?? '';
-        if ($rol === 'admin' || $rol === 'editor') {
-            $A->notasActualizar();
-        } else {
-            $Co->notasActualizar();
-        }
+        if ($rol === 'editor') { $E->notasActualizar(); } else { $A->notasActualizar(); }
         break;
     }
     case 'notas.eliminar': {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ' . BASE_URL . '/config/app.php?accion=notas.listar'); break; }
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') { irA(BASE_URL . '/config/app.php?accion=notas.listar'); }
         $rol = $_SESSION['usuario']['tipoUsuario'] ?? '';
-        if ($rol === 'admin' || $rol === 'editor') {
-            $A->notasEliminar();
-        } else {
-            $Co->notasEliminar();
-        }
+        if ($rol === 'editor') { $E->notasEliminar(); } else { $A->notasEliminar(); }
         break;
     }
+
+    // HORARIOS
+    case 'horarios.listar': {
+        $rol = $_SESSION['usuario']['tipoUsuario'] ?? '';
+        if ($rol === 'editor') { $E->horariosListar(); } else { $A->horariosListar(); }
+        break;
+    }
+    case 'horarios.crear': {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') { irA(BASE_URL . '/config/app.php?accion=horarios.listar'); }
+        $rol = $_SESSION['usuario']['tipoUsuario'] ?? '';
+        if ($rol === 'editor') { $E->horariosCrear(); } else { $A->horariosCrear(); }
+        break;
+    }
+    case 'horarios.actualizar': {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') { irA(BASE_URL . '/config/app.php?accion=horarios.listar'); }
+        $rol = $_SESSION['usuario']['tipoUsuario'] ?? '';
+        if ($rol === 'editor') { $E->horariosActualizar(); } else { $A->horariosActualizar(); }
+        break;
+    }
+    case 'horarios.eliminar': {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') { irA(BASE_URL . '/config/app.php?accion=horarios.listar'); }
+        $rol = $_SESSION['usuario']['tipoUsuario'] ?? '';
+        if ($rol === 'editor') { $E->horariosEliminar(); } else { $A->horariosEliminar(); }
+        break;
+    }
+
     //Mostrar directorio telefonico
     case 'consultor.directorio': {
         $Co->directorioListar();

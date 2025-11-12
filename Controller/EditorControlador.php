@@ -197,13 +197,6 @@ class EditorControlador extends AppControlador {
         exit;
     }
 
-    public function horariosListar(): void {
-        $this->asegurarEditor();
-        $q = trim($_GET['q'] ?? '');
-        $horarios = (new Horario())->listarAgrupado($q);
-        require __DIR__ . '/../View/editor/horariosTrabajo.php';
-    }
-
     public function bitacoraListar(): void {
         $this->asegurarEditor();
         $pdo     = BD::pdo();
@@ -265,11 +258,181 @@ class EditorControlador extends AppControlador {
         require __DIR__ . '/../View/editor/bitacora.php';
     }
 
-    public function notasListar(): void{
+    /* === NOTAS === */
+    public function notasListar(): void {
         $this->asegurarEditor();
         $q = trim($_GET['q'] ?? '');
-        $notas = (new Nota())->listar($q);
-        require __DIR__ . '/../View/editor/notas.php';
+        $m  = new Nota();
+        $notas = $m->listar($q);
+        $propietarios = $m->propietariosTodos();
+        // PRG
+        $errores        = $_SESSION['errores']       ?? [];
+        $errores_origen = $_SESSION['erroresOrigen'] ?? null;
+        $viejo          = $_SESSION['viejo']         ?? [];
+        unset($_SESSION['errores'], $_SESSION['erroresOrigen'], $_SESSION['viejo']);
+        // Cargar vista editor si existe, si no, usar admin
+        $vistaEditor = __DIR__ . '/../View/editor/notas.php';
+        $vistaAdmin  = __DIR__ . '/../View/admin/notas.php';
+        if (is_file($vistaEditor)) {
+            require $vistaEditor;
+        } else {
+            require $vistaAdmin;
+        }
+    }
+
+    public function notasCrear(): void {
+        $this->asegurarEditor();
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . BASE_URL . '/config/app.php?accion=notas.listar'); exit;
+        }
+        $propietarioId = (int)($_POST['propietarioId'] ?? 0);
+        $texto         = trim($_POST['texto'] ?? '');
+        $autorId       = (int)($_SESSION['usuario']['id'] ?? 0);
+        $errores = [];
+        if ($propietarioId<=0) $errores[]='Selecciona un contacto.';
+        if ($texto==='')       $errores[]='La nota no puede estar vacía.';
+        if ($autorId<=0)       $errores[]='Sesión inválida.';
+        if ($errores) {
+            fallar_y_volver('notas', $errores, compact('propietarioId','texto'));
+            header('Location: ' . BASE_URL . '/config/app.php?accion=notas.listar'); exit;
+        }
+        $idNuevo = (new Nota())->crear($propietarioId, $texto, $autorId);
+        if ($idNuevo>0) {
+            poner_flash('success','nota.creada');
+        } else {
+            poner_flash('danger','nota.error.crear');
+        }
+        header('Location: ' . BASE_URL . '/config/app.php?accion=notas.listar'); exit;
+    }
+
+    public function notasActualizar(): void {
+        $this->asegurarEditor();
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . BASE_URL . '/config/app.php?accion=notas.listar'); exit;
+        }
+        $idNota = (int)($_POST['idNota'] ?? 0);
+        $texto  = trim($_POST['texto'] ?? '');
+        $errores = [];
+        if ($idNota<=0) $errores[]='ID inválido.';
+        if ($texto==='') $errores[]='La nota no puede estar vacía.';
+        if ($errores) {
+            fallar_y_volver('notas', $errores, ['idNota'=>$idNota, 'texto'=>$texto]);
+            header('Location: ' . BASE_URL . '/config/app.php?accion=notas.listar'); exit;
+        }
+        $ok = (new Nota())->actualizar($idNota, $texto);
+        if ($ok) { poner_flash('primary','nota.actualizada'); }
+        else     { poner_flash('danger','nota.error.actualizar'); }
+        header('Location: ' . BASE_URL . '/config/app.php?accion=notas.listar'); exit;
+    }
+
+    public function notasEliminar(): void {
+        $this->asegurarEditor();
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . BASE_URL . '/config/app.php?accion=notas.listar'); exit;
+        }
+        $idNota = (int)($_POST['idNota'] ?? 0);
+        if ($idNota<=0) {
+            poner_flash('danger','nota.error.eliminar');
+            header('Location: ' . BASE_URL . '/config/app.php?accion=notas.listar'); exit;
+        }
+        $ok = (new Nota())->eliminar($idNota);
+        if ($ok) { poner_flash('danger','nota.eliminada'); }
+        else     { poner_flash('danger','nota.error.eliminar'); }
+        header('Location: ' . BASE_URL . '/config/app.php?accion=notas.listar'); exit;
+    }
+
+
+    /* === HORARIOS === */
+    public function horariosListar(): void {
+        $this->asegurarEditor();
+        $q = trim($_GET['q'] ?? '');
+        $modelo = new Horario();
+        $horarios = $modelo->listarAgrupado($q);
+        $propietarios = $modelo->propietariosTodos();
+        // PRG
+        $errores        = $_SESSION['errores']       ?? [];
+        $errores_origen = $_SESSION['erroresOrigen'] ?? null;
+        $viejo          = $_SESSION['viejo']         ?? [];
+        unset($_SESSION['errores'], $_SESSION['erroresOrigen'], $_SESSION['viejo']);
+        $vistaEditor = __DIR__ . '/../View/editor/horariosTrabajo.php';
+        $vistaAdmin  = __DIR__ . '/../View/admin/horariosTrabajo.php';
+        if (is_file($vistaEditor)) { require $vistaEditor; } else { require $vistaAdmin; }
+    }
+
+    public function horariosCrear(): void {
+        $this->asegurarEditor();
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . BASE_URL . '/config/app.php?accion=horarios.listar'); exit;
+        }
+        $propietarioId = (int)($_POST['propietarioId'] ?? 0);
+        $dias = $_POST['dias'] ?? [];
+        $he = trim($_POST['horaEntrada'] ?? '');
+        $hs = trim($_POST['horaSalida']  ?? '');
+        $errores = [];
+        if ($propietarioId <= 0)                $errores[] = 'Empleado inválido.';
+        if (empty($dias))                        $errores[] = 'Selecciona al menos un día.';
+        if ($he === '' || $hs === '')            $errores[] = 'Horas inválidas.';
+        if ($he !== '' && $hs !== '' && $he >= $hs) $errores[] = 'La hora de entrada debe ser menor a la de salida.';
+        if ($errores) {
+            fallar_y_volver('horarios', $errores, ['propietarioId'=>$propietarioId,'dias'=>$dias,'horaEntrada'=>$he,'horaSalida'=>$hs]);
+            header('Location: ' . BASE_URL . '/config/app.php?accion=horarios.listar'); exit;
+        }
+        $ok = (new Horario())->crearMultiple($propietarioId, $dias, $he, $hs);
+        if ($ok) { poner_flash('success', 'hor.creado'); }
+        else     { poner_flash('danger', 'hor.error.crear'); }
+        header('Location: ' . BASE_URL . '/config/app.php?accion=horarios.listar'); exit;
+    }
+
+    public function horariosActualizar(): void {
+        $this->asegurarEditor();
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . BASE_URL . '/config/app.php?accion=horarios.listar'); exit;
+        }
+        $idRep = (int)($_POST['idHorario'] ?? 0);
+        $propietarioId = (int)($_POST['propietarioId'] ?? 0);
+        $dias = $_POST['dias'] ?? [];
+        $he = trim($_POST['horaEntrada'] ?? '');
+        $hs = trim($_POST['horaSalida']  ?? '');
+        $old_he = trim($_POST['old_he'] ?? '');
+        $old_hs = trim($_POST['old_hs'] ?? '');
+        $errores = [];
+        if ($idRep <= 0)                         $errores[] = 'ID inválido.';
+        if ($propietarioId <= 0)                 $errores[] = 'Empleado inválido.';
+        if (empty($dias))                        $errores[] = 'Selecciona al menos un día.';
+        if ($he === '' || $hs === '')            $errores[] = 'Horas inválidas.';
+        if ($he !== '' && $hs !== '' && $he >= $hs) $errores[] = 'La hora de entrada debe ser menor a la de salida.';
+        if ($old_he === '' || $old_hs === '')    $errores[] = 'Faltan horas originales del bloque.';
+        if ($errores) {
+            fallar_y_volver('horarios', $errores, [
+                'idHorario'=>$idRep,'propietarioId'=>$propietarioId,
+                'dias'=>$dias,'horaEntrada'=>$he,'horaSalida'=>$hs,
+                'old_he'=>$old_he,'old_hs'=>$old_hs
+            ]);
+            header('Location: ' . BASE_URL . '/config/app.php?accion=horarios.listar'); exit;
+        }
+        $ok = (new Horario())->actualizarBloque($propietarioId, $dias, $he, $hs, $old_he, $old_hs);
+        if ($ok) { poner_flash('primary', 'hor.actualizado'); }
+        else     { poner_flash('danger',  'hor.error.actualizar'); }
+        header('Location: ' . BASE_URL . '/config/app.php?accion=horarios.listar'); exit;
+    }
+
+    public function horariosEliminar(): void {
+        $this->asegurarEditor();
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . BASE_URL . '/config/app.php?accion=horarios.listar'); exit;
+        }
+        $idRep = (int)($_POST['idHorario'] ?? 0);
+        $propietarioId = (int)($_POST['propietarioId'] ?? 0);
+        $he = trim($_POST['old_he'] ?? '');
+        $hs = trim($_POST['old_hs'] ?? '');
+        if ($idRep <= 0 || $propietarioId <= 0 || $he === '' || $hs === '') {
+            poner_flash('danger', 'hor.error.eliminar');
+            header('Location: ' . BASE_URL . '/config/app.php?accion=horarios.listar'); exit;
+        }
+        $ok = (new Horario())->eliminarBloque($propietarioId, $he, $hs);
+        if ($ok) { poner_flash('danger', 'hor.eliminado'); }
+        else     { poner_flash('danger', 'hor.error.eliminar'); }
+        header('Location: ' . BASE_URL . '/config/app.php?accion=horarios.listar'); exit;
     }
 
     public function solicitudesCambioListar(): void {
